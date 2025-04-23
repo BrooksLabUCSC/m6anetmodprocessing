@@ -1,0 +1,14 @@
+mkdir m6aprocessing-github
+cd m6aprocessing-github
+git init
+git config --global user.email "yourID@ucsc.edu"
+git config --global user.name "Firstname Lastname"
+git remote set-url origin git@github.com:BrooksLabUCSC/m6anetmodprocessing.git
+git pull origin main
+ls
+git status
+git add README.md
+git add count_transcripts_and_genes.py
+git commit -m "added transcript counting script"
+git push origin main
+	if this fails, try git push origin HEAD:main
