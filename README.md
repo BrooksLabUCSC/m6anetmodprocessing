@@ -13,3 +13,8 @@ number of isoforms with mod information:  18103
 number of genes with mod information:  7189
 average number of isoforms per gene with mod information:  2.52
 ```
+
+How to run Selam's mod ratio making table:
+```bash
+python3 mod_ratio_table.py
+```
