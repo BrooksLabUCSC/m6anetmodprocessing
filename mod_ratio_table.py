@@ -1,23 +1,23 @@
 import pandas as pd 
 import numpy as np 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--output','-o', type=str, action='store', help = 'output file')
+parser.add_argument('--input','-i', type=str, action='store', help = 'input manifest')
+args = parser.parse_args()
+output = args.output
+manifest = args.input
+print(output)
+sample_manifest = pd.read_csv(manifest, sep='\t')
 
 
+all_samples = []
+sample_names = []
 
-mt1dmso = pd.read_csv('/scratch/smehrete/mt1dmso_both/data.site_proba.csv')
-mt1csc = pd.read_csv('/scratch/smehrete/mt1csc_both/data.site_proba.csv')
-mt2csc = pd.read_csv('/scratch/smehrete/mt2csc_both/data.site_proba.csv')
-mt2dmso = pd.read_csv('/scratch/smehrete/mt2dmso_both/data.site_proba.csv')
-wt1csc = pd.read_csv('/scratch/smehrete/wt1csc_both/data.site_proba.csv')
-wt1dmso = pd.read_csv('/scratch/smehrete/wt1dmso_both/data.site_proba.csv')
-wt2csc = pd.read_csv('/scratch/smehrete/wt2csc_both/data.site_proba.csv')
-wt2dmso = pd.read_csv('/scratch/smehrete/wt2dmso_both/data.site_proba.csv')
-
-
-
-all_samples = [mt1dmso,mt1csc,mt2csc,mt2dmso,wt1csc,wt1dmso,wt2csc,wt2dmso]
-
-for i in range(len(all_samples)):
-    df = all_samples[i]
+for i, row in sample_manifest.iterrows():
+    sample_name = row['sample_name']
+    file_path = row['file_path']
+    df = pd.read_csv(file_path)
     # print(df)
     # df[['transcript_id', 'gene_id']] = df['transcript_id'].str.split('_', expand=True)
     split_cols = df['transcript_id'].str.split('_', expand=True)
@@ -26,7 +26,8 @@ for i in range(len(all_samples)):
         df['gene_id'] = split_cols[1]
 
     df = df[['transcript_id', 'gene_id', 'transcript_position', 'n_reads', 'probability_modified', 'kmer', 'mod_ratio']]
-    all_samples[i] = df
+    all_samples.append(df)
+    sample_names.append(sample_name)
 
 shared_transcripts = set(zip(all_samples[0]['transcript_id'], all_samples[0]['transcript_position']))
 for df in all_samples[1:]:
@@ -77,4 +78,4 @@ for df in combined_df[1:]:
 
 final_combined_df.reset_index(drop=True, inplace=True)
 # now i want to save to my computer as a csv file
-final_combined_df.to_csv('/private/groups/brookslab/smehrete/RNA_modification/m6aprocessing-github/042924_selam_m6a_modratio_table.csv', index=False)
+final_combined_df.to_csv(output, index=False)
