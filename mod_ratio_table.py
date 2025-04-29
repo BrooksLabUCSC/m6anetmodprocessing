@@ -66,7 +66,7 @@ for df in filtered_dfs_3plus:
 filtered_dfs_final[0]
 
 combined_df = []
-for df, sample_name in zip(filtered_dfs_final, ['mt1dmso', 'mt1csc', 'mt2csc', 'mt2dmso', 'wt1csc', 'wt1dmso', 'wt2csc', 'wt2dmso']):
+for df, sample_name in zip(filtered_dfs_final, sample_names):
     df['transcript_pos'] = df['gene_id'] + "_" + df['transcript_id'] + "_" + df['transcript_position'].astype(str)
     df_sample = df[['transcript_pos', 'mod_ratio']]
     df_sample.rename(columns={'mod_ratio': sample_name}, inplace=True)
@@ -77,5 +77,5 @@ for df in combined_df[1:]:
     final_combined_df = pd.merge(final_combined_df, df, on='transcript_pos', how='outer')
 
 final_combined_df.reset_index(drop=True, inplace=True)
-# now i want to save to my computer as a csv file
+#to save as a csv
 final_combined_df.to_csv(output, index=False)
